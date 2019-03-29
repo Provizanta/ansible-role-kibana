@@ -7,3 +7,6 @@ configuration:
   elasticsearch:
     url: "http://localhost:9200"
 
+service:
+  enabled: yes
+  state: started

@@ -1,5 +1,5 @@
 - name: restart kibana
   systemd:
     name: kibana
-    state: restarted
+    state: "{{ 'restarted' if service['state'] == 'started' else service['state'] }}"
 
