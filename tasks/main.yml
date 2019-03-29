@@ -1,20 +1,50 @@
+---
+
+- name: platform dependent tasks
+  # include_tasks: "{{ lookup('first_found', params, errors='ignore') }}"
+  include_vars: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_system }}.yml"
+      paths:
+        - '{{ role_path }}/vars/'
+      skip: true
+  tags: [install, configure]
+
+- name: platform dependent tasks
+  # include_tasks: "{{ lookup('first_found', params, errors='ignore') }}"
+  include_tasks: "{{ item }}"
+  with_first_found:
+    - files:
+        - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
+        - "{{ ansible_distribution }}.yml"
+        - "{{ ansible_os_family }}.yml"
+        - "{{ ansible_system }}.yml"
+      paths:
+        - '{{ role_path }}/tasks/platform/'
+      skip: true
+  tags: install
+
 - name: install kibana
   package:
     name: kibana
     state: present
   tags: install
 
-- name: configure kibana
-  template:
-    src: "kibana.yml"
-    dest: "/etc/kibana/kibana.yml"
-  notify: restart kibana
-  tags: configure
-
 - name: enable services
   service:
     name: kibana
     enabled: yes
     state: started
-  tags: configure, install
+  tags: install
+
+- name: configure kibana
+  template:
+    src: "kibana.yml.j2"
+    dest: "{{ platform['config_file_path'] }}"
+  notify: restart kibana
+  tags: configure
 
