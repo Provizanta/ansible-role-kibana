@@ -1,31 +1,31 @@
 ---
 
 - name: platform dependent vars
-  # include_tasks: "{{ lookup('first_found', params, errors='ignore') }}"
   include_vars: "{{ item }}"
-  with_first_found:
-    - files:
+  loop: "{{ query('first_found', params, errors='ignore') }}"
+  vars:
+    params:
+      files:
         - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
         - "{{ ansible_system }}.yml"
       paths:
         - '{{ role_path }}/vars/'
-      skip: true
-  tags: [install, configure]
+  tags: always
 
 - name: platform dependent tasks
-  # include_tasks: "{{ lookup('first_found', params, errors='ignore') }}"
   include_tasks: "{{ item }}"
-  with_first_found:
-    - files:
+  loop: "{{ query('first_found', params, errors='ignore') }}"
+  vars:
+    params:
+      files:
         - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
         - "{{ ansible_system }}.yml"
       paths:
         - '{{ role_path }}/tasks/platform/'
-      skip: true
   tags: install
 
 - name: install kibana
@@ -34,17 +34,21 @@
     state: present
   tags: install
 
-- name: enable services
-  service:
-    name: kibana
-    enabled: "{{ service['enabled'] }}"
-    state: "{{ 'restarted' if service['state'] == 'started' else service['state'] }}"
-  tags: [install,configure]
+- name: populate service facts
+  service_facts:
+  tags: always
 
 - name: configure kibana
   template:
     src: "kibana.yml.j2"
-    dest: "{{ platform['config_file_path'] }}"
-  notify: restart kibana
+    dest: "{{ config_file_path | default(platform['config_file_path']) }}"
   tags: configure
+
+- name: setup services
+  systemd:
+    name: kibana
+    enabled: "{{ service['enabled'] }}"
+    state: "{{ 'restarted' if service['state'] == 'started' else service['state'] }}"
+  when: ansible_facts['services']['kibana'] is defined 
+  tags: always
 
