@@ -1,0 +1,6 @@
+---
+
+- name: restart kibana
+  service:
+    name: kibana
+    state: "{{ (service['state'] == 'started') | ternary('restarted', service['state']) }}"

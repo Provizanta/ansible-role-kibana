@@ -1,12 +1,28 @@
 ---
 
 galaxy_info:
-  author: Tibor Csoka
+  role_name: kibana
+  author: Tibor Csóka
+  description: |
+    "Establish kibana with a specified configuration."
+  company: ""
 
-  min_ansible_version: 2.7.8
+  license: MIT
+
+  min_ansible_version: 2.4
 
   platforms:
-  - name: Ubuntu
-    versions:
-    - 16.04
-    - 18.04
+    - name: Ubuntu
+      versions:
+        - bionic
+        - cosmic
+    - name: Debian
+      versions:
+        - stretch
+        - buster
+
+  galaxy_tags:
+    - kibana
+    - elk
+
+dependencies: []

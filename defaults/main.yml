@@ -1,3 +1,5 @@
+---
+
 version: 6
 
 configuration:
@@ -8,5 +10,5 @@ configuration:
     url: "http://localhost:9200"
 
 service:
-  enabled: yes
+  enabled: true
   state: started

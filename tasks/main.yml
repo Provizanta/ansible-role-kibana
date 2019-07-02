@@ -6,12 +6,12 @@
   vars:
     params:
       files:
-        - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
+        - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
         - "{{ ansible_system }}.yml"
       paths:
-        - '{{ role_path }}/vars/'
+        - '{{ role_path }}/vars/platform/'
   tags: always
 
 - name: platform dependent tasks
@@ -20,12 +20,12 @@
   vars:
     params:
       files:
-        - "{{ ansible_distribution }}-{{ ansible_distribution_release }}.yml"
+        - "{{ ansible_distribution }}-{{ ansible_distribution_version }}.yml"
         - "{{ ansible_distribution }}.yml"
         - "{{ ansible_os_family }}.yml"
         - "{{ ansible_system }}.yml"
       paths:
-        - '{{ role_path }}/tasks/platform/'
+        - '{{ role_path }}/tasks/platform/pre-install/'
   tags: install
 
 - name: install kibana
@@ -42,13 +42,15 @@
   template:
     src: "kibana.yml.j2"
     dest: "{{ config_file_path | default(platform['config_file_path']) }}"
+  notify: restart kibana
   tags: configure
 
 - name: setup services
   systemd:
     name: kibana
     enabled: "{{ service['enabled'] }}"
-    state: "{{ 'restarted' if service['state'] == 'started' else service['state'] }}"
-  when: ansible_facts['services']['kibana'] is defined 
+    state: "{{ service['state'] }}"
+  when:
+    - ansible_service_mgr == 'systemd'
+    - ansible_facts['services']['kibana'] is defined
   tags: always
-
