@@ -3,7 +3,14 @@
 - name: Converge
   hosts: all
   roles:
-    - kibana
+    - role: kibana
+      vars:
+        elk_kibana_configuration:
+          server:
+            host: "0.0.0.0"
+            port: "5601"
+          elasticsearch:
+            url: "http://localhost:9200"
 
 # post_tasks:
 #   - name: Kibana should be running on a default port

@@ -39,17 +39,20 @@
   tags: always
 
 - name: configure kibana
+  when: elk_kibana_configuration is defined
   template:
     src: "kibana.yml.j2"
     dest: "{{ config_file_path | default(platform['config_file_path']) }}"
+    owner: kibana
+    group: kibana
   notify: restart kibana
   tags: configure
 
 - name: setup services
   systemd:
     name: kibana
-    enabled: "{{ service['enabled'] }}"
-    state: "{{ service['state'] }}"
+    enabled: "{{ elk_kibana_service['enabled'] }}"
+    state: "{{ elk_kibana_service['state'] }}"
   when:
     - ansible_service_mgr == 'systemd'
     - ansible_facts['services']['kibana'] is defined

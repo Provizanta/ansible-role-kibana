@@ -1,6 +1,6 @@
 ---
 
-version: 6
+elk_version: 6
 
 configuration:
   server:
@@ -9,6 +9,6 @@ configuration:
   elasticsearch:
     url: "http://localhost:9200"
 
-service:
+elk_kibana_service:
   enabled: true
   state: started

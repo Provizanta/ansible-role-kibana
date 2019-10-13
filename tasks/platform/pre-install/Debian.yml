@@ -42,7 +42,7 @@
 
 - name: establish elk repo
   apt_repository:
-    repo: "deb https://artifacts.elastic.co/packages/{{ version | int }}.x/apt stable main"
+    repo: "deb https://artifacts.elastic.co/packages/{{ elk_version | int }}.x/apt stable main"
     update_cache: true
     filename: elk
   tags: install

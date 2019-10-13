@@ -3,4 +3,4 @@
 - name: restart kibana
   service:
     name: kibana
-    state: "{{ (service['state'] == 'started') | ternary('restarted', service['state']) }}"
+    state: "{{ (elk_kibana_service['state'] == 'started') | ternary('restarted', elk_kibana_service['state']) }}"
