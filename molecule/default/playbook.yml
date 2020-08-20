@@ -8,7 +8,7 @@
       apt:
         update_cache: true
   roles:
-    - role: kibana
+    - role: ansible-role-kibana
       vars:
         elk_kibana_configuration:
           server:

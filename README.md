@@ -1,6 +1,8 @@
 Kibana
 =========
 
+![Build & Deploy](https://github.com/Provizanta/ansible-role-kibana/workflows/molecule/badge.svg?branch=master)
+
 Install and configure Kibana, part of the ELK stack.
 
 Requirements
