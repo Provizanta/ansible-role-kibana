@@ -2,6 +2,7 @@
 
 galaxy_info:
   role_name: kibana
+  namespace: provizanta
   author: Tibor Csóka
   description: |
     "Establish kibana with a specified configuration."
