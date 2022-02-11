@@ -1,4 +1,4 @@
-Kibana
+Ansible role: Kibana
 =========
 
 ![Build & Deploy](https://github.com/Provizanta/ansible-role-kibana/workflows/molecule/badge.svg?branch=master)
